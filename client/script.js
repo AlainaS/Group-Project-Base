@@ -75,7 +75,6 @@ function cast(filmID){
   })
   
   
-  
 }
 
 function removeDups(arr) {
