@@ -1,13 +1,5 @@
+let filmCount = 0;
 
-
-const film1 = "The Breakfast Club";
-const film2 = "Ferris Bueller's Day Off";
-const imdbkey = "k_ljv5h5vz/";
-const firstCall = "https://imdb-api.com/en/API/Search/"+ imdbkey+ film1;
-const secondCall = "https://imdb-api.com/en/API/Search/"+ imdbkey + film2;
-
-
-document.getElementById("h2").innerHTML = "Looking for Cast and Crew members in common between " + film1 + " & " + film2;
 
 
 let cclist1;
@@ -15,7 +7,38 @@ let cclist2;
 
 let firstdone = false;
 
-const output = document.getElementById("data").innerHTML;
+
+
+// Need to clear form after submit
+async function mainEvent() {
+  
+  const titleform = document.getElementById("titleForm");
+  const apiCall = "https://imdb-api.com/en/API/Search/k_ljv5h5vz/";
+  
+  // Gets the names of the films from the form
+  titleform.addEventListener("submit", async (x) => {
+    x.preventDefault();
+    console.log("Film added");
+    const formData = new FormData(x.target); // get the data from the listener target
+    const formProps = Object.fromEntries(formData); // Turn it into an object
+    console.log(Object.values(formProps));
+    filmCount++;
+
+
+    getFilmTitle(apiCall + Object.values(formProps))
+    .then(function(jsonData){
+      console.log(jsonData);
+      let firstID= JSON.stringify(jsonData.results[0]).substring(7,16);
+      console.log("ID: " + firstID);
+      cclist1 = cast(firstID); 
+       
+    });
+  });
+
+
+  
+}
+
 
     
 async function getFilmTitle(name){
@@ -24,10 +47,7 @@ async function getFilmTitle(name){
 }
 
 
-
-console.log("Start")
-
-
+/*
 getFilmTitle(firstCall)
 .then(function(jsonData){
   console.log(jsonData);
@@ -48,10 +68,10 @@ getFilmTitle(firstCall)
 
 })
 
-
+*/
 
 function cast(filmID){
-  let cast1 = "https://imdb-api.com/en/API/FullCast/" + imdbkey + filmID;
+  let cast1 = "https://imdb-api.com/en/API/FullCast/k_ljv5h5vz/" + filmID;
 
   console.log("Cast: " + cast1);
   getFilmTitle(cast1)
@@ -93,11 +113,5 @@ async function intersect() {
 
 
 
-async function mainEvent() {
-  const form = document.querySelector('.main_form');
-  const submit = document.querySelector('#get-film');
-  
-  const results = await fetch('https://imdb-api.com/en/API/Search/');
-}
 
-
+document.addEventListener('DOMContentLoaded', async () => mainEvent());
