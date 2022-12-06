@@ -35,8 +35,10 @@ async function mainEvent() {
         const poster = JSON.stringify(jsonData.backdrops[0].link);
         if(firstdone){
           document.getElementById("secondpost").src = poster.slice(1, -1);
+          document.getElementById("postName2").innerHTML = Object.values(formProps)
         } else {
           document.getElementById("firstpost").src = poster.slice(1, -1);
+          document.getElementById("postName1").innerHTML = Object.values(formProps)
           
         }
       });
@@ -69,6 +71,7 @@ async function getPoster(name){
 function cast(filmID){
   let cast1 = "https://imdb-api.com/en/API/FullCast/k_ljv5h5vz/" + filmID;
 
+  // Get all cast members from the film
   console.log("Cast: " + cast1);
   getFilmTitle(cast1)
   .then(function(jsonData){
@@ -76,12 +79,42 @@ function cast(filmID){
     let response = JSON.stringify(jsonData);
     let matches = response.match(regex).map(x => x.replace('name":"',""));
 
+
+
     // Only calls intersect function if more than 2 films were added
     filmCC.push(matches);
     if(firstdone){
       intersect();
-    } 
-    firstdone = true;
+
+            
+      // Updates photo and name for first actor
+      document.getElementById("preview11").src = JSON.stringify(jsonData.actors[0].image).slice(1, -1);
+      document.getElementById("preview11Name").innerHTML = JSON.stringify(jsonData.actors[0].name).slice(1, -1);
+
+      // Updates photo and name for second actor
+      document.getElementById("preview12").src = JSON.stringify(jsonData.actors[1].image).slice(1, -1);
+      document.getElementById("preview12Name").innerHTML = JSON.stringify(jsonData.actors[1].name).slice(1, -1);
+
+      // Updates photo and name for third actor
+      document.getElementById("preview13").src = JSON.stringify(jsonData.actors[2].image).slice(1, -1);
+      document.getElementById("preview13Name").innerHTML = JSON.stringify(jsonData.actors[2].name).slice(1, -1);
+
+    } else{
+      firstdone = true;
+      
+      // Updates photo and name for first actor
+      document.getElementById("preview1").src = JSON.stringify(jsonData.actors[0].image).slice(1, -1);
+      document.getElementById("preview1Name").innerHTML = JSON.stringify(jsonData.actors[0].name).slice(1, -1);
+
+      // Updates photo and name for second actor
+      document.getElementById("preview2").src = JSON.stringify(jsonData.actors[1].image).slice(1, -1);
+      document.getElementById("preview2Name").innerHTML = JSON.stringify(jsonData.actors[1].name).slice(1, -1);
+
+      // Updates photo and name for third actor
+      document.getElementById("preview3").src = JSON.stringify(jsonData.actors[2].image).slice(1, -1);
+      document.getElementById("preview3Name").innerHTML = JSON.stringify(jsonData.actors[2].name).slice(1, -1);
+    }
+    
     return matches;
     
   })
@@ -95,9 +128,11 @@ function removeDups(arr) {
 
 async function intersect() {
 
+  const a = filmCC[0];
+  const b = filmCC[1];
+
   const filteredArray = removeDups(a.filter(value => b.includes(value)));
   console.log("In Common: " + filteredArray);
-  //document.getElementById("h3").innerHTML = "People in common: " + filteredArray;
   //document.getElementById("cloud").appendChild(document.createElement('img')).src = "https://quickchart.io/wordcloud?text=" + y + z;
 }
 
